@@ -52,7 +52,7 @@ var brickColumnCount = 6;
 var brickWidth = 81;
 var brickHeight = 20;
 var brickPadding = 10;
-var brickOffsetTop = 30;
+var brickOffsetTop = 40;
 var brickOffsetLeft = 30;
 
 let bricks = [];
@@ -66,6 +66,8 @@ for (let c = 0; c < brickColumnCount; c++) {
 console.log(bricks);
 
 function drawBricks() {
+  let l = 27;
+
   for (let c = 0; c < brickColumnCount; c++) {
     for (let r = 0; r < brickRowCount; r++) {
       if (bricks[c][r].status == 1) {
@@ -76,7 +78,8 @@ function drawBricks() {
         bricks[c][r].y = brickY;
         ctx.beginPath();
         ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle = "#0095DD";
+        ctx.fillStyle = `hsl(198, 100%, ${l}%)`;
+        l++;
         ctx.fill();
         ctx.closePath();
       }
@@ -86,7 +89,7 @@ function drawBricks() {
 
 let score = 0;
 function drawScore() {
-  ctx.font = "16px serif";
+  ctx.font = "16px sans-serif";
   ctx.fillStyle = "#0099DD";
   ctx.fillText("SCORE: " + score, 35, 20);
 }
