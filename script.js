@@ -3,11 +3,11 @@ var ctx = canvas.getContext("2d");
 canvas.width = 600;
 canvas.height = 400;
 
-let x = 20;
-let y = 20;
 let dx = 2;
-let dy = 2;
+let dy = -2;
 let ballRadius = 10;
+let y = canvas.height - 80;
+let x = canvas.width / 2 - ballRadius / 2;
 
 function drawBall() {
   ctx.beginPath();
@@ -59,7 +59,7 @@ for (let c = 0; c < brickColumnCount; c++) {
   bricks[c] = [];
 
   for (let r = 0; r < brickRowCount; r++) {
-    bricks[c][r] = { x: 0, y: 0 };
+    bricks[c][r] = { x: 0, y: 0, status: 1 };
   }
 }
 console.log(bricks);
@@ -67,16 +67,18 @@ console.log(bricks);
 function drawBricks() {
   for (let c = 0; c < brickColumnCount; c++) {
     for (let r = 0; r < brickRowCount; r++) {
-      let brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-      let brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+      if (bricks[c][r].status == 1) {
+        let brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+        let brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
 
-      bricks[c][r].x = brickX;
-      bricks[c][r].y = brickY;
-      ctx.beginPath();
-      ctx.rect(brickX, brickY, brickWidth, brickHeight);
-      ctx.fillStyle = "#0095DD";
-      ctx.fill();
-      ctx.closePath();
+        bricks[c][r].x = brickX;
+        bricks[c][r].y = brickY;
+        ctx.beginPath();
+        ctx.rect(brickX, brickY, brickWidth, brickHeight);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+        ctx.closePath();
+      }
     }
   }
 }
@@ -85,7 +87,12 @@ function collisionDetection() {
   for (var c = 0; c < brickColumnCount; c++) {
     for (var r = 0; r < brickRowCount; r++) {
       var b = bricks[c][r];
-      // calculations
+      if (b.status == 1) {
+        if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+          dy = -dy;
+          b.status = 0;
+        }
+      }
     }
   }
 }
@@ -95,6 +102,7 @@ function draw() {
   drawBall();
   drawPaddle();
   drawBricks();
+  collisionDetection();
   x += dx;
   y += dy;
 
@@ -132,4 +140,4 @@ function draw() {
   }
 }
 
-var interval = setInterval(draw, 1000);
+var interval = setInterval(draw, 10);
